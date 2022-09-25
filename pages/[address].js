@@ -31,7 +31,7 @@ export default function Detail({Data, DonationsData}) {
         provider
       );
 
-      fetch('https://ipfs.infura.io/ipfs/' + Data.storyUrl)
+      fetch('https://crowdfunding.infura-ipfs.io/ipfs/' + Data.storyUrl)
             .then(res => res.text()).then(data => storyData = data);
 
       const MyDonations = contract.filters.donated(Address);
