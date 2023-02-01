@@ -20,11 +20,11 @@ export default function Dashboard() {
       const Address = await signer.getAddress();
 
       const provider = new ethers.providers.JsonRpcProvider(
-        process.env.NEXT_PUBLIC_RPC_URL
+        process.env.ALCHEMY_URL
       );
   
       const contract = new ethers.Contract(
-        process.env.NEXT_PUBLIC_ADDRESS,
+        process.env.PUBLIC_ADDRESS,
         CampaignFactory.abi,
         provider
       );
@@ -60,7 +60,7 @@ export default function Dashboard() {
             <Image 
               alt="crowdfunding dapp"
               layout='fill' 
-              src={"https://crowdfunding.infura-ipfs.io/ipfs/" + e.image} 
+              src={"https://fundme.infura-ipfs.io/ipfs/" + e.image} 
             />
           </CardImg>
           <Title>

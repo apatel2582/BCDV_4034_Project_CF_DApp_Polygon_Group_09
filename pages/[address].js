@@ -22,7 +22,7 @@ export default function Detail({Data, DonationsData}) {
       const Address = await signer.getAddress();
 
       const provider = new ethers.providers.JsonRpcProvider(
-        process.env.NEXT_PUBLIC_RPC_URL
+        process.env.ALCHEMY_URL
       );
     
       const contract = new ethers.Contract(
@@ -31,7 +31,7 @@ export default function Detail({Data, DonationsData}) {
         provider
       );
 
-      fetch('https://crowdfunding.infura-ipfs.io/ipfs/' + Data.storyUrl)
+      fetch('https://fundme.infura-ipfs.io/ipfs/' + Data.storyUrl)
             .then(res => res.text()).then(data => storyData = data);
 
       const MyDonations = contract.filters.donated(Address);
@@ -81,7 +81,7 @@ export default function Detail({Data, DonationsData}) {
             alt="crowdfunding dapp"
             layout="fill"
             src={
-              "https://crowdfunding.infura-ipfs.io/ipfs/" + Data.image
+              "https://fundme.infura-ipfs.io/ipfs/" + Data.image
             }
           />
         </ImageSection>
@@ -89,6 +89,7 @@ export default function Detail({Data, DonationsData}) {
           {story}
         </Text>
       </LeftContainer>
+
       <RightContainer>
         <Title>{Data.title}</Title>
         <DonateSection>
@@ -141,11 +142,11 @@ export default function Detail({Data, DonationsData}) {
 
 export async function getStaticPaths() {
   const provider = new ethers.providers.JsonRpcProvider(
-    process.env.NEXT_PUBLIC_RPC_URL
+    process.env.ALCHEMY_URL
   );
 
   const contract = new ethers.Contract(
-    process.env.NEXT_PUBLIC_ADDRESS,
+    process.env.PUBLIC_ADDRESS,
     CampaignFactory.abi,
     provider
   );
@@ -165,7 +166,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context) {
   const provider = new ethers.providers.JsonRpcProvider(
-    process.env.NEXT_PUBLIC_RPC_URL
+    process.env.ALCHEMY_URL
   );
 
   const contract = new ethers.Contract(

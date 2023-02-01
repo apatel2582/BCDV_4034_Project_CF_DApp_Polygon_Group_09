@@ -6,8 +6,11 @@ import {TailSpin} from 'react-loader-spinner'
 import {create as IPFSHTTPClient} from 'ipfs-http-client';
 
 // const client = IPFSHTTPClient("https://ipfs.infura.io:5001/api/v0");
-const projectId = '2DfVAn21Qsjaiyf6vPsOb1H0M8b'
-const projectSecret = '1850a3ce8d231c928e64c01e31b6553f'
+// const projectId = process.env.PUBLIC_IPFS_ID
+// const projectSecret = process.env.PUBLIC_IPFS_KEY
+const projectId ='2L5pwuAwz1P2cJYyTXAqIm1MMjD'
+const projectSecret ='3e23f57d4f414ea0a95d6be9a14111e2'
+
 const auth = 'Basic ' + Buffer.from(projectId + ":" + projectSecret).toString('base64')
 
 const client = IPFSHTTPClient({
@@ -18,6 +21,7 @@ const client = IPFSHTTPClient({
     authorization: auth
   }
 })
+
 
 const FormRightWrapper = () => {
   const Handler = useContext(FormState);
@@ -65,11 +69,17 @@ const FormRightWrapper = () => {
           <RowSecondInput>
             <label>Choose Category</label>
             <Select onChange={Handler.FormHandler} value={Handler.form.category} name="category">
+              <option>SocialCauses</option>
+              <option>Finance</option>
+              <option>Science</option>
+              <option>Environment</option>
+              <option>Arts</option>
               <option>Education</option>
               <option>Health</option>
               <option>Animal</option>
             </Select>
           </RowSecondInput>
+    
         </FormRow>
       </FormInput>
       {/* Image */}
