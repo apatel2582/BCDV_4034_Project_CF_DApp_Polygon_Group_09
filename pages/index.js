@@ -8,6 +8,7 @@ import { ethers } from "ethers";
 import CampaignFactory from "../artifacts/contracts/Campaign.sol/CampaignFactory.json";
 import { useState } from "react";
 import Link from "next/link";
+import { PUBLIC_ADDRESS } from "../context";
 
 export default function Index({
   AllData,
@@ -92,7 +93,7 @@ export async function getStaticProps() {
   );
 
   const contract = new ethers.Contract(
-    process.env.PUBLIC_ADDRESS,
+    PUBLIC_ADDRESS,
     CampaignFactory.abi,
     provider
   );

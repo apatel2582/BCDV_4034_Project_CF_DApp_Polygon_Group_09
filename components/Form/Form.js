@@ -6,6 +6,7 @@ import { TailSpin } from "react-loader-spinner";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
 import CampaignFactory from "../../artifacts/contracts/Campaign.sol/CampaignFactory.json";
+import { PUBLIC_ADDRESS } from "../../context";
 
 const FormState = createContext();
 
@@ -41,13 +42,11 @@ const Form = () => {
     e.preventDefault();
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    // const provider = new ethers.providers.Web3Provider(window.ethereum);
 
     const signer = provider.getSigner();
 
     const contract = new ethers.Contract(
-      //process.env.PUBLIC_ADDRESS,
-      0xde96e1b68aff26c6f953cd1120c6b8b3783197d9,
+     PUBLIC_ADDRESS,
       CampaignFactory.abi,
       signer
     );
@@ -65,6 +64,7 @@ const Form = () => {
 
       const CampaignAmount = ethers.utils.parseEther(form.requiredAmount);
 
+      //create campaign
       const campaignData = await contract.createCampaign(
         form.campaignTitle,
         CampaignAmount,
@@ -119,6 +119,8 @@ const Form = () => {
     </FormState.Provider>
   );
 };
+
+//css
 
 const FormWrapper = styled.div`
   width: 100%;

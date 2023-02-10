@@ -4,6 +4,7 @@ import {ethers} from 'ethers';
 import CampaignFactory from '../artifacts/contracts/Campaign.sol/CampaignFactory.json'
 import Campaign from '../artifacts/contracts/Campaign.sol/Campaign.json'
 import { useEffect, useState } from "react";
+import { PUBLIC_ADDRESS } from "../context";
 
 
 export default function Detail({Data, DonationsData}) {
@@ -20,7 +21,6 @@ export default function Detail({Data, DonationsData}) {
       const Web3provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = Web3provider.getSigner();
       const Address = await signer.getAddress();
-
       const provider = new ethers.providers.JsonRpcProvider(
         process.env.ALCHEMY_URL
       );
@@ -146,7 +146,7 @@ export async function getStaticPaths() {
   );
 
   const contract = new ethers.Contract(
-    process.env.PUBLIC_ADDRESS,
+    PUBLIC_ADDRESS,
     CampaignFactory.abi,
     provider
   );
