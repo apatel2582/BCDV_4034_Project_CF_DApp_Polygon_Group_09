@@ -31,29 +31,23 @@ To run the application locally, follow these steps:
 
 # Run Locally
 
-Clone the project
-
+Clone this repository:
 ```bash
-  git clone https://github.com/Rkvishnu/fundme.git
+ git clone https://github.com/Rkvishnu/web3-crowdfunding-dapp-polygon
 ```
-
 Go to the project directory
-
 ```bash
-  cd fundme/fundraiser-web3
+  cd web3-crowdfunding-dapp-polygon
 ```
-
 Install dependencies
-
 ```bash
   npm install
 ```
-
 Start the server
-
 ```bash
   npm run dev
 ```
+ 
  
 # Deployment
 To deploy the application to the Polygon blockchain with Alchemy node provider, follow these steps:
