@@ -6,11 +6,11 @@ This is a Decentralised crowdfunding application that allows users to create and
 
 # Features:
 
--User authentication: users can connect with their Metamask Wallet 
--Project creation: users can create new projects with a title, description, and funding goals
--Campaign Types: users can between various options like Business/FInance. Educaion,Chairty/NGOs, Animal etc.
--Project browsing: users can browse existing projects and see their details, including the amount raised so far
--Project funding: users can fund a project by donation in the form of $MATIC cryptocurrency and can track the fund he/she has donated
+-User authentication: users can connect with their Metamask Wallet <br/>
+-Project creation: users can create new projects with a title, description, and funding goals<br/>
+-Campaign Types: users can between various options like Business/FInance. Educaion,Chairty/NGOs, Animal etc.<br/>
+-Project browsing: users can browse existing projects and see their details, including the amount raised so far.<br/>
+-Project funding: users can fund a project by donation in the form of $MATIC cryptocurrency and can track the fund he/she has donated<br/>
 -Project updates: project creators can update their project with progress reports
 
 # Technologies Used:
