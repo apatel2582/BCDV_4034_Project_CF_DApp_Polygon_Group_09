@@ -14,14 +14,14 @@ This is a Decentralised crowdfunding application that allows users to create and
 -Project updates: project creators can update their project with progress reports
 
 # Technologies Used:
-Next.js
-Styled Components
-Solidity
-Hardhat
-Ether.js
-Polygon blockchain
-Alchemy node provider
-Metamask Wallet 
+Next.js <br>
+Styled Components <br>
+Solidity <br>
+Hardhat <br>
+Ether.js <br>
+Polygon blockchain <br>
+Alchemy node provider <br>
+Metamask Wallet <br>
 
 
 # Installation:
