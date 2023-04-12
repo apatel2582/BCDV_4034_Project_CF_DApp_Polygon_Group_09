@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+        - name: web3app
+          image: 703997246287.dkr.ecr.us-east-2.amazonaws.com/ekslearning01:1.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
