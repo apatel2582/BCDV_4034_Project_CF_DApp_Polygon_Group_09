@@ -7,7 +7,7 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
         AWS_DEFAULT_REGION = "us-east-1"
-        ECR_REGISTRY=  ""
+        ECR_REGISTRY= "703997246287.dkr.ecr.us-east-1.amazonaws.com/web3app"
     }
     stages {
         stage('Create EKS cluster with Terraform') {
@@ -27,8 +27,8 @@ pipeline {
                      script {
                         dir('src')
                     {
-                        sh 'docker build -t webapp:latest .'
-                        sh "docker tag webapp:latest ${ECR_REGISTRY}:latest"
+                        sh 'docker build -t web3app:latest .'
+                        sh "docker tag web3app:latest ${ECR_REGISTRY}:latest"
                         sh "docker push ${ECR_REGISTRY}:latest"
                     }
                     }

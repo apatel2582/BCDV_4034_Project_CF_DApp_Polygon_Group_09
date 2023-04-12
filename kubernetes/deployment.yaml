@@ -15,8 +15,8 @@ spec:
         app: webapp
     spec:
       containers:
-        - name: web3app
-          image: 703997246287.dkr.ecr.us-east-2.amazonaws.com/ekslearning01:1.1
+        - name: webapp
+          image: 703997246287.dkr.ecr.us-east-1.amazonaws.com/web3app:1.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
