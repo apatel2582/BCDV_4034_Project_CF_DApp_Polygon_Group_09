@@ -1,4 +1,4 @@
-name: deploy to EKS
+name: Deploy web3 app to EKS
 on:
   push:
     branches: [ "master" ]
@@ -22,7 +22,6 @@ jobs:
       uses: hashicorp/setup-terraform@v2
       with:
          terraform_version: 1.1.7
-      id:   install
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -55,6 +54,7 @@ jobs:
       run: aws eks update-kubeconfig --name myapp-eks-cluster
     
     - name: Deploy to EKS
+      working-directory: kubernetes
       run: |
         kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml
