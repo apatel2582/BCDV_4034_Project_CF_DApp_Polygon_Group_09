@@ -5,7 +5,6 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
         AWS_DEFAULT_REGION = "us-east-1"
         ECR_REGISTRY= "703997246287.dkr.ecr.us-east-1.amazonaws.com/web3app"
     }

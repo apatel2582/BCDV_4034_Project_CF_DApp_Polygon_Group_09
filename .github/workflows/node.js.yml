@@ -1,7 +1,8 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Node.js CI
+name: Deploy to EKS
+
 
 on:
   push:
@@ -9,23 +10,42 @@ on:
   pull_request:
     branches: [ "master" ]
 
-jobs:
-  build:
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: us-east-1
+  ECR_REGISTRY: 703997246287.dkr.ecr.us-east-1.amazonaws.com/web3app
 
+jobs:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install AWS CLI and Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli docker.io
+          sudo usermod -aG docker $USER
+
+      - name: Create EKS cluster with Terraform
+        working-directory: terraform
+        run: |
+          terraform init
+          terraform apply --auto-approve
+
+      - name: Build and push Docker image to ECR
+        working-directory: src
+        run: |
+          docker build -t web3app:latest .
+          docker tag web3app:latest ${{ env.ECR_REGISTRY }}:latest
+          docker push ${{ env.ECR_REGISTRY }}:latest
+
+      - name: Deploy to EKS
+        working-directory: kubernetes
+        run: |
+          aws eks update-kubeconfig --name myapp-eks-cluster
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
