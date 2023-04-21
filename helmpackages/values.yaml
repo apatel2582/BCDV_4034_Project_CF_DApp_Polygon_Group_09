@@ -1,0 +1,11 @@
+replicaCount: 1
+Deployment:
+  name: webapp
+  app: webapp
+
+Service:
+  name: webapp
+  app: webapp
+
+Ports: 
+  port: 80
