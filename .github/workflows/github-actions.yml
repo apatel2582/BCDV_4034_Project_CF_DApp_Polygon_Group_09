@@ -72,3 +72,4 @@ jobs:
           kubectl apply -f service_cfdapp4034.yaml
           kubectl apply -f deployment_mongodb.yaml
           kubectl apply -f service_mongodb.yaml
+          kubectl apply -f pvc.yaml
