@@ -1,0 +1,13 @@
+# Service for cfdapp
+apiVersion: v1
+kind: Service
+metadata:
+  name: cfdapp4034
+spec:
+  selector:
+    app: cfdapp4034
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: LoadBalancer
