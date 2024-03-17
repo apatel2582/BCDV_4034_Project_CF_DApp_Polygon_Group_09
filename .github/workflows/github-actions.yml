@@ -1,4 +1,5 @@
 name: Deploy web3 app to GKE
+
 on:
   push:
     branches: ["master"]
@@ -62,6 +63,11 @@ jobs:
         run: |
           terraform init
           terraform apply --auto-approve
+
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin
+          gcloud components update
 
       - name: Get GKE credentials
         run: gcloud container clusters get-credentials myapp-gke-cluster-4034 --region northamerica-northeast2
