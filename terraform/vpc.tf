@@ -1,30 +1,50 @@
-data "aws_availability_zones" "azs" {}
-
 module "myapp-vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "4.0.0" # Adjusted version, ensure it's compatible with your requirements
+  source  = "terraform-google-modules/network/google"
+  version = "~> 3.0"
 
-  name            = "myapp-vpc"
-  cidr            = var.vpc_cidr_block
-  azs             = data.aws_availability_zones.azs.names
-  private_subnets = var.private_subnet_cidr_blocks
-  public_subnets  = var.public_subnet_cidr_blocks
+  project_id   = var.project_id
+  network_name = "myapp-vpc"
+  routing_mode = "REGIONAL"
 
-  enable_nat_gateway   = true
-  single_nat_gateway   = true
-  enable_dns_hostnames = true
+  subnets = [
+    {
+      subnet_name   = "private-subnet-01"
+      subnet_ip     = var.private_subnet_cidr_blocks[0]
+      subnet_region = var.region
+    },
+    {
+      subnet_name   = "private-subnet-02"
+      subnet_ip     = var.private_subnet_cidr_blocks[1]
+      subnet_region = var.region
+    },
+    {
+      subnet_name   = "private-subnet-03"
+      subnet_ip     = var.private_subnet_cidr_blocks[2]
+      subnet_region = var.region
+    },
+    {
+      subnet_name   = "public-subnet-01"
+      subnet_ip     = var.public_subnet_cidr_blocks[0]
+      subnet_region = var.region
+    },
+    {
+      subnet_name   = "public-subnet-02"
+      subnet_ip     = var.public_subnet_cidr_blocks[1]
+      subnet_region = var.region
+    },
+    {
+      subnet_name   = "public-subnet-03"
+      subnet_ip     = var.public_subnet_cidr_blocks[2]
+      subnet_region = var.region
+    }
+  ]
 
-  tags = {
-    "kubernetes.io/cluster/myapp-eks-cluster" = "shared"
-  }
-
-  public_subnet_tags = {
-    "kubernetes.io/cluster/myapp-eks-cluster" = "shared"
-    "kubernetes.io/role/elb"                  = 1
-  }
-
-  private_subnet_tags = {
-    "kubernetes.io/cluster/myapp-eks-cluster" = "shared"
-    "kubernetes.io/role/internal-elb"         = 1
+  secondary_ranges = {
+    private-subnet-01 = []
+    private-subnet-02 = []
+    private-subnet-03 = []
+    public-subnet-01  = []
+    public-subnet-02  = []
+    public-subnet-03  = []
   }
 }
