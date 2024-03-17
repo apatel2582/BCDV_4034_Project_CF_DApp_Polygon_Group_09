@@ -29,7 +29,7 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.1.7
+          terraform_version: 1.7.5
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2

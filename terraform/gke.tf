@@ -31,7 +31,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "primary_nodes" {
-  name       = "${google_container_cluster.primary.name}-nodes"
+  name       = google_container_cluster.primary.name
   location   = var.region
   cluster    = google_container_cluster.primary.name
   
