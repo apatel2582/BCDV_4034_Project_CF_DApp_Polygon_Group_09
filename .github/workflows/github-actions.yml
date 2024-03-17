@@ -1,4 +1,4 @@
-name: Deploy web3 app to EKS
+name: Deploy web3 app to GKE
 on:
   push:
     branches: ["master"]
@@ -15,55 +15,47 @@ jobs:
       - name: Install kubectl
         uses: azure/setup-kubectl@v2.0
         with:
-          version: "v1.29.0" # default is latest stable
-        id: install
+          version: "v1.29.0"
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.1.7
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Configure Google Cloud Credentials
+        uses: google-github-actions/setup-gcloud@v0
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build, tag, and push docker image to Amazon ECR
+      - name: Build, tag, and push docker image to Docker Hub
         working-directory: src
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: cfdapp4034
-          IMAGE_TAG: 1.1
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker build -t ${DOCKERHUB_USERNAME}/cfdapp4034:$IMAGE_TAG .
+          docker push ${DOCKERHUB_USERNAME}/cfdapp4034:$IMAGE_TAG
 
-      - name: Build, tag, and push cfdappserver image to Amazon ECR
+      - name: Build, tag, and push cfdappserver image to Docker Hub
         working-directory: server
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: cfdappserver
-          IMAGE_TAG: 1.1
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker build -t ${DOCKERHUB_USERNAME}/cfdappserver:$IMAGE_TAG .
+          docker push ${DOCKERHUB_USERNAME}/cfdappserver:$IMAGE_TAG
 
-      - name: Create EKS cluster with Terraform
+      - name: Create GKE cluster with Terraform
         working-directory: terraform
         run: |
           terraform init
           terraform apply --auto-approve
 
-      - name: Update kube config
-        run: aws eks update-kubeconfig --name myapp-eks-cluster
+      - name: Get GKE credentials
+        run: gcloud container clusters get-credentials myapp-gke-cluster --zone ${{ secrets.GKE_ZONE }}
 
-      - name: Deploy to EKS
+      - name: Deploy to GKE
         working-directory: kubernetes
         run: |
           kubectl apply -f deployment_cfdappserver.yaml
