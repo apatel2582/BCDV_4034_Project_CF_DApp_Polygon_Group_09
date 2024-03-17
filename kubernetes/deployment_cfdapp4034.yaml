@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: cfdapp4034
-          image: 730335668847.dkr.ecr.us-east-1.amazonaws.com/cfdapp4034:1.1
+          image: chargaoshou/cfdapp4034:1.1
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
