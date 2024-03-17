@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+
+  cfdappserver:
+    image: chargaoshou/cfdappserver:1.0.1
+    ports:
+      - "4000:4000"
+    restart: always
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/
+
+  cfdapp:
+    image: chargaoshou/cfdapp4034:1.0.1
+    ports:
+      - "3000:3000"
+    restart: always
+    depends_on:
+      - cfdappserver
+
+volumes:
+  mongo-data:
