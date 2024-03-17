@@ -4,7 +4,7 @@ module "gke" {
 
   project_id     = var.project_id
   name           = "myapp-gke-cluster"
-  region         = var.region
+  region         = "northamerica-northeast2"  # Use region without specifying a zone
   network        = module.myapp-vpc.network_name
   subnetwork     = module.myapp-vpc.subnets_names[0]
 
