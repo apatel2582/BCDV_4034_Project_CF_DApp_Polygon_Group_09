@@ -77,3 +77,7 @@ jobs:
         run: |
           kubectl apply -f deployment_cfdapp4034.yaml
           kubectl apply -f service_cfdapp4034.yaml
+
+      - name: Trigger Jenkins Job
+        run: |
+          curl -X POST "$JENKINS_URL" --user "user:${{ secrets.JENKINS_TOKEN }}"
