@@ -80,4 +80,4 @@ jobs:
 
       - name: Trigger Jenkins Job
         run: |
-          curl -X POST "http://34.130.142.51/job/JenkinsJob4034/build?token=JenkinsJob4034" --user "user:${{ secrets.JENKINS_API_TOKEN }}"
+          curl -X POST "http://34.130.142.51/job/JenkinsJob4034/build?token=JenkinsJob4034" --user "user:${{ secrets.JENKINS_TOKEN }}"
