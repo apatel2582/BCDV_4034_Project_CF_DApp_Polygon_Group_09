@@ -77,7 +77,30 @@ jobs:
         run: |
           kubectl apply -f deployment_cfdapp4034.yaml
           kubectl apply -f service_cfdapp4034.yaml
-          kubectl apply -f prom_frontend.yaml
+
+      - name: Install Helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+
+      - name: Add Prometheus Helm chart repository
+        run: |
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo update
+
+      - name: Deploy Prometheus using Helm
+        run: |
+          helm install prometheus prometheus-community/prometheus
+
+      - name: Add Grafana Helm chart repository
+        run: |
+          helm repo add grafana https://grafana.github.io/helm-charts
+          helm repo update
+
+      - name: Deploy Grafana using Helm
+        run: |
+          helm install grafana grafana/grafana
 
       - name: Trigger Jenkins Job
         run: |
