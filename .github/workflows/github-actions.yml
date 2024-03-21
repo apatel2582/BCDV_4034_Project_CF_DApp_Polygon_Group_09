@@ -89,18 +89,28 @@ jobs:
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
 
-      - name: Deploy Prometheus using Helm
+      - name: Check and deploy Prometheus using Helm
+        id: deploy_prometheus
         run: |
-          helm install prometheus prometheus-community/prometheus
+          if ! helm status prometheus; then
+            helm install prometheus prometheus-community/prometheus
+          else
+            helm upgrade prometheus prometheus-community/prometheus
+          fi
 
       - name: Add Grafana Helm chart repository
         run: |
           helm repo add grafana https://grafana.github.io/helm-charts
           helm repo update
 
-      - name: Deploy Grafana using Helm
+      - name: Check and deploy Grafana using Helm
+        id: deploy_grafana
         run: |
-          helm install grafana grafana/grafana
+          if ! helm status grafana; then
+            helm install grafana grafana/grafana
+          else
+            helm upgrade grafana grafana/grafana
+          fi
 
       - name: Trigger Jenkins Job
         run: |
