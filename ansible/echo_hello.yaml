@@ -1,0 +1,6 @@
+- name: Echo Hello on Kubernetes Nodes
+  hosts: k8s_nodes
+  become: yes
+  tasks:
+    - name: Echo Hello
+      command: echo "hello"

@@ -1,0 +1,50 @@
+sudo su - bitnami
+cd /home/andshriller
+cat ~/.ssh/id_rsa
+bitnami@jenkins-1-vm:/home/andyshriller$ ansible-playbook -i gcp.yml echo_hello.yaml -v
+
+
+kubectl logs -f cfdapp4034-5456c7bb45-gtqrq
+
+while ($true) {
+     cls
+     kubectl top pods
+     Start-Sleep -Seconds 2
+ }
+
+kubectl get pods
+
+kubectl get pods --namespace default -l "app.kubernetes.io/name=prometheus,app.kubernetes.io/instance=prometheus" -o jsonpath="{.items[0].metadata.name}"
+kubectl --namespace default port-forward %POD_NAME% 9090
+
+
+POWERSHELL ONLY - 
+PS C:\Users\anish> $secret = kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}"
+PS C:\Users\anish> [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($secret))
+
+
+kubectl get pods --namespace default -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=grafana" -o jsonpath="{.items[0].metadata.name}"
+kubectl --namespace default port-forward %POD_NAME% 3000
+
+sudo -u bitnami ssh-keygen -t rsa -b 4096
+
+
+ssh-copy-id -i /home/bitnami/.ssh/id_rsa.pub bitnami@34.130.53.220
+ssh-copy-id -i /home/bitnami/.ssh/id_rsa.pub bitnami@34.130.8.196
+ssh-copy-id -i /home/bitnami/.ssh/id_rsa.pub bitnami@34.130.246.28
+
+
+
+
+kubectl --namespace default port-forward prometheus-server-6b56bf746f-x4rhh 9090
+
+kubectl --namespace default port-forward grafana-9df9c8678-md7xc 3000
+
+kubectl get pods --all-namespaces
+kubectl get pods
+
+
+
+$secret = kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}"
+[System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($secret))
+
