@@ -19,7 +19,7 @@ export default function Index({
   ArtsData,
   HealthData,
   EducationData,
-  AnimalData
+  AnimalData,
 }) {
   const [filter, setFilter] = useState(AllData);
 
@@ -32,7 +32,9 @@ export default function Index({
         <Category onClick={() => setFilter(SocialCausesData)}>Social</Category>
         <Category onClick={() => setFilter(FinanceData)}>Finance</Category>
         <Category onClick={() => setFilter(ScienceData)}>Science</Category>
-        <Category onClick={() => setFilter(EnvironmentData)}>Environment</Category>
+        <Category onClick={() => setFilter(EnvironmentData)}>
+          Environment
+        </Category>
         <Category onClick={() => setFilter(ArtsData)}>Arts</Category>
         <Category onClick={() => setFilter(HealthData)}>Health</Category>
         <Category onClick={() => setFilter(EducationData)}>Education</Category>
@@ -49,7 +51,10 @@ export default function Index({
                 <Image
                   alt="Crowdfunding dapp"
                   layout="fill"
-                  src={"https://fundme.infura-ipfs.io/ipfs/" + e.image}
+                  src={
+                    "https://rose-wonderful-yak-265.mypinata.cloud/ipfs/" +
+                    e.image
+                  }
                 />
               </CardImg>
               <Title>{e.title}</Title>

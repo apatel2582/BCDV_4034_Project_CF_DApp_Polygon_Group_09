@@ -1,77 +1,79 @@
 import styled from "styled-components";
 import Image from "next/image";
-import {ethers} from 'ethers';
-import CampaignFactory from '../artifacts/contracts/Campaign.sol/CampaignFactory.json'
-import Campaign from '../artifacts/contracts/Campaign.sol/Campaign.json'
+import { ethers } from "ethers";
+import CampaignFactory from "../artifacts/contracts/Campaign.sol/CampaignFactory.json";
+import Campaign from "../artifacts/contracts/Campaign.sol/Campaign.json";
 import { useEffect, useState } from "react";
 import { PUBLIC_ADDRESS } from "../context";
 
-
-export default function Detail({Data, DonationsData}) {
+export default function Detail({ Data, DonationsData }) {
   const [mydonations, setMydonations] = useState([]);
-  const [story, setStory] = useState('');
-  const [amount, setAmount] = useState();
+  const [story, setStory] = useState("");
+  const [amount, setAmount] = useState("");
   const [change, setChange] = useState(false);
 
   useEffect(() => {
     const Request = async () => {
-      let storyData;
-      
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const Web3provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = Web3provider.getSigner();
-      const Address = await signer.getAddress();
-      const provider = new ethers.providers.JsonRpcProvider(
-        process.env.ALCHEMY_URL
-      );
-    
-      const contract = new ethers.Contract(
-        Data.address,
-        Campaign.abi,
-        provider
-      );
+      if (!Data) return; // Ensure Data is available
 
-      fetch('https://fundme.infura-ipfs.io/ipfs/' + Data.storyUrl)
-            .then(res => res.text()).then(data => storyData = data);
+      try {
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const Web3provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = Web3provider.getSigner();
+        const Address = await signer.getAddress();
+        const provider = new ethers.providers.JsonRpcProvider(
+          process.env.NEXT_PUBLIC_ALCHEMY_URL
+        );
+        const contract = new ethers.Contract(
+          Data.address,
+          Campaign.abi,
+          provider
+        );
 
-      const MyDonations = contract.filters.donated(Address);
-      const MyAllDonations = await contract.queryFilter(MyDonations);
+        // Fetch and set story data
+        const storyResponse = await fetch(
+          "https://rose-wonderful-yak-265.mypinata.cloud/ipfs/" + Data.storyUrl
+        );
+        const storyData = await storyResponse.text();
+        setStory(storyData);
 
-      setMydonations(MyAllDonations.map((e) => {
-        return {
+        // Fetch and set donations data
+        const MyDonations = contract.filters.donated(Address);
+        const MyAllDonations = await contract.queryFilter(MyDonations);
+        const donations = MyAllDonations.map((e) => ({
           donar: e.args.donar,
           amount: ethers.utils.formatEther(e.args.amount),
-          timestamp : parseInt(e.args.timestamp)
-        }
-      }));
-
-      setStory(storyData);
-    }
+          timestamp: parseInt(e.args.timestamp),
+        }));
+        setMydonations(donations);
+      } catch (error) {
+        console.error("Error fetching campaign data:", error);
+      }
+    };
 
     Request();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [change])
-
+  }, [Data, change]); // Add Data to the dependency array
 
   const DonateFunds = async () => {
+    if (!Data) return; // Ensure Data is available
+
     try {
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      await window.ethereum.request({ method: "eth_requestAccounts" });
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      
       const contract = new ethers.Contract(Data.address, Campaign.abi, signer);
-      
-      const transaction = await contract.donate({value: ethers.utils.parseEther(amount)});
+
+      const transaction = await contract.donate({
+        value: ethers.utils.parseEther(amount || "0"), // Ensure amount is not undefined or empty
+      });
       await transaction.wait();
 
-      setChange(true);
-      setAmount('');
-      
-  } catch (error) {
-      console.log(error);
-  }
-
-  }
+      setChange(!change); // Toggle change to trigger useEffect
+      setAmount("");
+    } catch (error) {
+      console.error("Error donating:", error);
+    }
+  };
 
   return (
     <DetailWrapper>
@@ -81,19 +83,22 @@ export default function Detail({Data, DonationsData}) {
             alt="crowdfunding dapp"
             layout="fill"
             src={
-              "https://fundme.infura-ipfs.io/ipfs/" + Data.image
+              "https://rose-wonderful-yak-265.mypinata.cloud/ipfs/" + Data.image
             }
           />
         </ImageSection>
-        <Text>
-          {story}
-        </Text>
+        <Text>{story}</Text>
       </LeftContainer>
 
       <RightContainer>
         <Title>{Data.title}</Title>
         <DonateSection>
-          <Input value={amount} onChange={(e) => setAmount(e.target.value)} type="number" placeholder="Enter Amount To Donate" />
+          <Input
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            type="number"
+            placeholder="Enter Amount To Donate"
+          />
           <Donate onClick={DonateFunds}>Donate</Donate>
         </DonateSection>
         <FundsData>
@@ -112,33 +117,38 @@ export default function Detail({Data, DonationsData}) {
             {DonationsData.map((e) => {
               return (
                 <Donation key={e.timestamp}>
-                <DonationData>{e.donar.slice(0,6)}...{e.donar.slice(39)}</DonationData>
-                <DonationData>{e.amount} Matic</DonationData>
-                <DonationData>{new Date(e.timestamp * 1000).toLocaleString()}</DonationData>
-              </Donation>
-              )
-            })
-            }
+                  <DonationData>
+                    {e.donar.slice(0, 6)}...{e.donar.slice(39)}
+                  </DonationData>
+                  <DonationData>{e.amount} Matic</DonationData>
+                  <DonationData>
+                    {new Date(e.timestamp * 1000).toLocaleString()}
+                  </DonationData>
+                </Donation>
+              );
+            })}
           </LiveDonation>
           <MyDonation>
             <DonationTitle>My Past Donation</DonationTitle>
             {mydonations.map((e) => {
               return (
                 <Donation key={e.timestamp}>
-                <DonationData>{e.donar.slice(0,6)}...{e.donar.slice(39)}</DonationData>
-                <DonationData>{e.amount} Matic</DonationData>
-                <DonationData>{new Date(e.timestamp * 1000).toLocaleString()}</DonationData>
-              </Donation>
-              )
-            })
-            }
+                  <DonationData>
+                    {e.donar.slice(0, 6)}...{e.donar.slice(39)}
+                  </DonationData>
+                  <DonationData>{e.amount} Matic</DonationData>
+                  <DonationData>
+                    {new Date(e.timestamp * 1000).toLocaleString()}
+                  </DonationData>
+                </Donation>
+              );
+            })}
           </MyDonation>
         </Donated>
       </RightContainer>
     </DetailWrapper>
   );
 }
-
 
 export async function getStaticPaths() {
   const provider = new ethers.providers.JsonRpcProvider(
@@ -156,12 +166,12 @@ export async function getStaticPaths() {
 
   return {
     paths: AllCampaigns.map((e) => ({
-        params: {
-          address: e.args.campaignAddress.toString(),
-        }
+      params: {
+        address: e.args.campaignAddress.toString(),
+      },
     })),
-    fallback: "blocking"
-  }
+    fallback: "blocking",
+  };
 }
 
 export async function getStaticProps(context) {
@@ -185,36 +195,31 @@ export async function getStaticProps(context) {
   const Donations = contract.filters.donated();
   const AllDonations = await contract.queryFilter(Donations);
 
-
   const Data = {
-      address: context.params.address,
-      title, 
-      requiredAmount: ethers.utils.formatEther(requiredAmount), 
-      image, 
-      receivedAmount: ethers.utils.formatEther(receivedAmount), 
-      storyUrl, 
-      owner,
-  }
+    address: context.params.address,
+    title,
+    requiredAmount: ethers.utils.formatEther(requiredAmount),
+    image,
+    receivedAmount: ethers.utils.formatEther(receivedAmount),
+    storyUrl,
+    owner,
+  };
 
-  const DonationsData =  AllDonations.map((e) => {
+  const DonationsData = AllDonations.map((e) => {
     return {
       donar: e.args.donar,
       amount: ethers.utils.formatEther(e.args.amount),
-      timestamp : parseInt(e.args.timestamp)
-  }});
+      timestamp: parseInt(e.args.timestamp),
+    };
+  });
 
   return {
     props: {
       Data,
-      DonationsData
-    }
-  }
-
-
+      DonationsData,
+    },
+  };
 }
-
-
-
 
 const DetailWrapper = styled.div`
   display: flex;

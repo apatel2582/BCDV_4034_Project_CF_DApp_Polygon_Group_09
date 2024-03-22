@@ -20,7 +20,7 @@ services:
       - MONGO_URI=mongodb://mongo:27017/
 
   cfdapp:
-    image: chargaoshou/cfdapp4034:1.0.1
+    image: chargaoshou/cfdapp4034:1.0.2
     ports:
       - "3000:3000"
     restart: always
