@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: cfdapp4034
-          image: chargaoshou/cfdapp4034:1.1
+          image: chargaoshou/cfdapp4034:1.2
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
