@@ -18,3 +18,4 @@ The project is to create a Crowd Funding DApp on Polygon. The DApp will allow us
 - GCP
 - Kubernetes
 - Jenkins
+- Test
